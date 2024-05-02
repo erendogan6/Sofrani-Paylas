@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.erendogan6.sofranipaylas.ui.activity.ui.home.HomeFragment"
+        android:name="com.erendogan6.sofranipaylas.ui.fragment.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
 </navigation>

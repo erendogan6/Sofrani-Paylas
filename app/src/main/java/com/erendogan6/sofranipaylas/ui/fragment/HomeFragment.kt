@@ -1,13 +1,13 @@
-package com.erendogan6.sofranipaylas.ui.activity.ui.home
+package com.erendogan6.sofranipaylas.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.erendogan6.sofranipaylas.databinding.FragmentHomeBinding
+import com.erendogan6.sofranipaylas.viewmodel.HomeViewModel
 
 class HomeFragment : Fragment() {
 
@@ -18,13 +18,8 @@ class HomeFragment : Fragment() {
         val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        return binding.root
     }
 
     override fun onDestroyView() {
