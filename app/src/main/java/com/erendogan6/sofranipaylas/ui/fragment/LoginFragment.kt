@@ -22,7 +22,7 @@ class LoginFragment : Fragment() {
 
         binding.loginButton.setOnClickListener {
             val email = binding.emailEditText.text.toString().trim()
-            val password = binding.passwordEditText.text.toString().trim()
+            val password = binding.passwordLoginEditText.text.toString().trim()
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(requireActivity(), "Email and password cannot be empty.", Toast.LENGTH_SHORT).show()
             } else {
