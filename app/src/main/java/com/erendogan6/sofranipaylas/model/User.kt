@@ -6,5 +6,4 @@ data class User(
     val fullname: String,
     val isHost: Boolean,
     val profilePicture: String,
-    val userID: String
 )
