@@ -17,4 +17,5 @@
     <string name="select_date">Tarih Seç</string>
     <string name="select_image">Resim Seç</string>
     <string name="submit">Paylaşımı Onayla</string>
+    <string name="logo">Logo</string>
 </resources>
