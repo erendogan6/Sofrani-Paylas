@@ -3,6 +3,7 @@ package com.erendogan6.sofranipaylas.ui.fragment
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.net.Uri
 import android.os.Build
@@ -22,6 +23,7 @@ import com.erendogan6.sofranipaylas.viewmodel.ShareViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 @AndroidEntryPoint
 class ShareFragment : Fragment() {
@@ -35,6 +37,7 @@ class ShareFragment : Fragment() {
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == AppCompatActivity.RESULT_OK && result.data != null) {
             selectedImageUri = result.data!!.data
+            binding.shareImage.setImageURI(selectedImageUri)
         }
     }
 
@@ -54,11 +57,11 @@ class ShareFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.datePickerButton.setOnClickListener {
+        binding.dateText.setOnClickListener {
             showDatePickerDialog()
         }
 
-        binding.imagePickerButton.setOnClickListener {
+        binding.shareImage.setOnClickListener {
             loadOrRequestPermission()
         }
 
@@ -101,8 +104,10 @@ class ShareFragment : Fragment() {
         DatePickerDialog(requireContext(), { _, year, month, dayOfMonth ->
             val pickedDate = Calendar.getInstance()
             pickedDate.set(year, month, dayOfMonth)
-            selectedDate = Timestamp(pickedDate.time) // Use java.util.Date from Calendar
+            selectedDate = Timestamp(pickedDate.time)
             toastGoster("Selected Date: ${dayOfMonth}/${month + 1}/$year")
+            val formattedDate = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(pickedDate.time).toString()
+            binding.dateText.setText(formattedDate)
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
     }
 
