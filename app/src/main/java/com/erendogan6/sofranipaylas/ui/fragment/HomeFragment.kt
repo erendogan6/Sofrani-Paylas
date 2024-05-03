@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.erendogan6.sofranipaylas.adapter.HomeAdapter
 import com.erendogan6.sofranipaylas.databinding.FragmentHomeBinding
-import com.erendogan6.sofranipaylas.viewmodel.HomeViewModel
+import com.erendogan6.sofranipaylas.model.Event
 
 class HomeFragment : Fragment() {
 
@@ -15,10 +16,11 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
+        val list: ArrayList<Event> = arrayListOf()
+        list.add(Event(null, "test", "1", "true", "2", "yok", null, 5, listOf(), "Selam"))
+        binding.homeRecyclerView.adapter = HomeAdapter(list)
+        binding.homeRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
         return binding.root
     }
 
