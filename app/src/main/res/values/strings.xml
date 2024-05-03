@@ -1,14 +1,20 @@
 <resources>
     <string name="app_name">Sofranı Paylaş</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_home">HomeActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="email">E-Mail</string>
-    <string name="password">Password</string>
-    <string name="login">Login</string>
-    <string name="register">Register</string>
+    <string name="email">E-Posta</string>
+    <string name="password">Şifre</string>
+    <string name="login">Giriş Yap</string>
+    <string name="register">Kayıt Ol</string>
     <string name="full_name">Tam Ad</string>
+    <string name="baslik">Başlık</string>
+    <string name="tarih">Tarih</string>
+    <string name="aciklama">Açıklama</string>
+    <string name="ana_ekran">Ana Ekran</string>
+    <string name="paylas">Paylaş</string>
+    <string name="profil">Profil</string>
+    <string name="title">Başlık</string>
+    <string name="description">Açıklama</string>
+    <string name="participants">Katılımcı Sayısı</string>
+    <string name="select_date">Tarih Seç</string>
+    <string name="select_image">Resim Seç</string>
+    <string name="submit">Paylaşımı Onayla</string>
 </resources>
