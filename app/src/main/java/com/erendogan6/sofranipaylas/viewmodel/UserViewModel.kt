@@ -3,13 +3,15 @@ package com.erendogan6.sofranipaylas.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.erendogan6.sofranipaylas.model.User
-import com.erendogan6.sofranipaylas.repository.UserRepository
+import com.erendogan6.sofranipaylas.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
+class UserViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
     private val _userLoginResult = MutableLiveData<User?>()
     val userLoginResult: LiveData<User?> = _userLoginResult
 
@@ -17,15 +19,18 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
     val userRegistrationResult: LiveData<Boolean> = _userRegistrationResult
 
     fun login(email: String, password: String) {
-        val result = userRepository.loginUser(email, password)
-        result.observeForever {
-            _userLoginResult.value = it
+        viewModelScope.launch {
+            repository.loginUser(email, password).collect { user ->
+                _userLoginResult.value = user
+            }
         }
     }
 
     fun register(email: String, password: String, fullname: String) {
-        userRepository.registerUser(email, password, fullname).observeForever {
-            _userRegistrationResult.value = it
+        viewModelScope.launch {
+            repository.registerUser(email, password, fullname).collect { result ->
+                _userRegistrationResult.value = result
+            }
         }
     }
 }
