@@ -1,5 +1,6 @@
 package com.erendogan6.sofranipaylas.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.erendogan6.sofranipaylas.R
 import com.erendogan6.sofranipaylas.databinding.FragmentLoginBinding
+import com.erendogan6.sofranipaylas.ui.activity.HomeActivity
 import com.erendogan6.sofranipaylas.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,7 +34,9 @@ class LoginFragment : Fragment() {
 
         viewModel.userLoginResult.observe(viewLifecycleOwner) { user ->
             if (user != null) {
-                findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                val intent = Intent(requireContext(), HomeActivity::class.java)
+                startActivity(intent)
+                requireActivity().finish()
             } else {
                 Toast.makeText(requireActivity(), "Login failed", Toast.LENGTH_SHORT).show()
             }
