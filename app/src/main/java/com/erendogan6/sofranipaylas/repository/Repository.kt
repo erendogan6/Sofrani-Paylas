@@ -79,4 +79,10 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
         }
     }
 
+    fun getPosts(): Flow<List<Post>> = flow {
+        val snapshot = firestore.collection("Posts").get().await()
+        val posts = snapshot.toObjects(Post::class.java)
+        emit(posts)
+    }
+
 }
