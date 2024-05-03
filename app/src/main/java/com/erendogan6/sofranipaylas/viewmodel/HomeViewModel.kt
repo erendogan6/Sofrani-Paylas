@@ -15,6 +15,10 @@ class HomeViewModel @Inject constructor(private val repository: Repository) : Vi
     private val _posts = MutableLiveData<List<Post?>>()
     val posts: LiveData<List<Post?>> = _posts
 
+    init {
+        getPosts()
+    }
+
     fun getPosts() {
         viewModelScope.launch {
             repository.getPosts().collect() { postList ->
