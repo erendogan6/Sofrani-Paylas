@@ -1,6 +1,7 @@
 package com.erendogan6.sofranipaylas.repository
 
 import android.net.Uri
+import android.util.Log
 import com.erendogan6.sofranipaylas.model.Post
 import com.erendogan6.sofranipaylas.model.User
 import com.google.firebase.Timestamp
@@ -26,13 +27,9 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
                 val document = userDocRef.get().await()
 
                 if (document.exists()) {
-                    val user = User(
-                        about = document.getString("about") ?: "",
-                        email = document.getString("email") ?: firebaseUser.email ?: "",
-                        fullname = document.getString("fullname") ?: "",
-                        isHost = document.getBoolean("isHost") ?: false,
-                        profilePicture = document.getString("profilePicture") ?: "",
-                    )
+                    val user = User(about = document.getString("about") ?: "", email = document.getString("email") ?: firebaseUser.email ?: "", isHost = document.getBoolean("isHost")
+                        ?: false, name = document.getString("name") ?: "", phone = document.getString("phone"), profilePicture = document.getString("profilePicture")
+                        ?: "", role = document.getString("role") ?: "", surname = document.getString("surname") ?: "", userName = document.getString("userName") ?: "")
                     emit(user)
                 } else {
                     emit(null)
@@ -45,13 +42,21 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
         }
     }
 
-    suspend fun registerUser(email: String, password: String, fullname: String): Flow<Boolean> = flow {
-        val task = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
-        if (task.user != null) {
-            val userMap = hashMapOf("fullname" to fullname, "email" to email)
-            firestore.collection("Users").document(task.user!!.uid).set(userMap).await()
-            emit(true)
-        } else {
+
+    suspend fun registerUser(email: String, password: String, name: String, surname: String, phone: String, userName: String): Flow<Boolean> = flow {
+        try {
+            val authResult = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+            val firebaseUser = authResult.user
+
+            if (firebaseUser != null) {
+                val userId = firebaseUser.uid
+                val user = User(about = "", email = email, isHost = false, name = name, surname = surname, phone = phone, profilePicture = "", role = "user", userName = userName)
+                firestore.collection("Users").document(userId).set(user).await()
+                emit(true)
+            } else {
+                emit(false)
+            }
+        } catch (e: Exception) {
             emit(false)
         }
     }
@@ -71,10 +76,19 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
     suspend fun submitPost(title: String, description: String, participants: Int, imageUrl: String, date: Timestamp): Flow<Result<Boolean>> = flow {
         try {
             val currentUserID = firebaseAuth.currentUser?.uid.orEmpty()
-            val post = Post(title = title, description = description, maxParticipants = participants, images = listOf(imageUrl), date = date, eventStatus = true, hostID = currentUserID)
-            firestore.collection("Posts").add(post).await()
-            emit(Result.success(true))
+            Log.d("submitPost", "Current User ID: $currentUserID")
+
+            if (currentUserID.isNotEmpty()) {
+                val post = Post(title = title, description = description, maxParticipants = participants, image = imageUrl, date = date, eventStatus = true, hostID = currentUserID)
+                Log.d("submitPost", "Post Data: $post")
+
+                firestore.collection("Posts").add(post).await()
+                emit(Result.success(true))
+            } else {
+                emit(Result.failure(Exception("User not authenticated")))
+            }
         } catch (e: Exception) {
+            Log.e("submitPost", "Error submitting post", e)
             emit(Result.failure(e))
         }
     }
@@ -85,8 +99,8 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
 
         for (post in posts) {
             val userSnapshot = firestore.collection("Users").document(post.hostID).get().await()
-            val email = userSnapshot.getString("email") ?: ""
-            post.hostEmail = email
+            val userName = userSnapshot.getString("userName") ?: ""
+            post.hostUserName = userName
         }
 
         emit(posts)
