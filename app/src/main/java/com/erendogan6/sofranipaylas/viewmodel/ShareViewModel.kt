@@ -16,8 +16,8 @@ class ShareViewModel @Inject constructor(private val repository: Repository) : V
     private val _uploadStatus = MutableLiveData<String>()
     val uploadStatus: LiveData<String> = _uploadStatus
 
-    private val _submitStatus = MutableLiveData<String>()
-    val submitStatus: LiveData<String> = _submitStatus
+    private val _submitStatus = MutableLiveData<Boolean>()
+    val submitStatus: LiveData<Boolean> = _submitStatus
 
     private val _imageUrl = MutableLiveData<String>()
     val imageUrl: LiveData<String> = _imageUrl
@@ -27,9 +27,9 @@ class ShareViewModel @Inject constructor(private val repository: Repository) : V
             repository.uploadImageAndGetUrl(imageUri).collect { result ->
                 result.onSuccess { url ->
                     _imageUrl.value = url
-                    _uploadStatus.value = "Upload successful"
+                    _uploadStatus.value = "true"
                 }.onFailure { throwable ->
-                    _uploadStatus.value = "Image upload failed: ${throwable.message}"
+                    _uploadStatus.value = "Resim Yüklemesinde Hata Oluştu: ${throwable.message}"
                 }
             }
         }
@@ -39,13 +39,11 @@ class ShareViewModel @Inject constructor(private val repository: Repository) : V
         viewModelScope.launch {
             repository.submitPost(title, description, participants, imageUrl, date).collect { result ->
                 result.onSuccess {
-                    _submitStatus.value = "Post submitted successfully"
+                    _submitStatus.value = true
                 }.onFailure { throwable ->
-                    _submitStatus.value = "Failed to submit post: ${throwable.message}"
+                    _submitStatus.value = true
                 }
             }
         }
     }
-
-
 }
