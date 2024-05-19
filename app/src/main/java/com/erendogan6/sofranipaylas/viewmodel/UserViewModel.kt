@@ -26,9 +26,9 @@ class UserViewModel @Inject constructor(private val repository: Repository) : Vi
         }
     }
 
-    fun register(email: String, password: String, fullname: String) {
+    fun register(email: String, password: String, name: String, surname: String, phone: String, userName: String) {
         viewModelScope.launch {
-            repository.registerUser(email, password, fullname).collect { result ->
+            repository.registerUser(email, password, name, surname, phone, userName).collect { result ->
                 _userRegistrationResult.value = result
             }
         }
