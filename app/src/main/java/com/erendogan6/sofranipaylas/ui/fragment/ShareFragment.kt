@@ -1,6 +1,7 @@
 package com.erendogan6.sofranipaylas.ui.fragment
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.icu.text.SimpleDateFormat
@@ -18,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.erendogan6.sofranipaylas.R
 import com.erendogan6.sofranipaylas.databinding.FragmentShareBinding
 import com.erendogan6.sofranipaylas.viewmodel.ShareViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -102,13 +105,19 @@ class ShareFragment : Fragment() {
     private fun showDatePickerDialog() {
         val calendar = Calendar.getInstance()
         DatePickerDialog(requireContext(), { _, year, month, dayOfMonth ->
-            val pickedDate = Calendar.getInstance()
-            pickedDate.set(year, month, dayOfMonth)
-            selectedDate = Timestamp(pickedDate.time)
-            toastGoster("Selected Date: ${dayOfMonth}/${month + 1}/$year")
-            val formattedDate = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(pickedDate.time).toString()
-            binding.dateText.setText(formattedDate)
+            showTimePickerDialog(year, month, dayOfMonth)
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
+    }
+
+    private fun showTimePickerDialog(year: Int, month: Int, dayOfMonth: Int) {
+        val timeCalendar = Calendar.getInstance()
+        TimePickerDialog(requireContext(), { _, hourOfDay, minute ->
+            val pickedDateTime = Calendar.getInstance()
+            pickedDateTime.set(year, month, dayOfMonth, hourOfDay, minute)
+            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            val formattedDateTime = formatter.format(pickedDateTime.time)
+            binding.dateText.setText(formattedDateTime)
+        }, timeCalendar.get(Calendar.HOUR_OF_DAY), timeCalendar.get(Calendar.MINUTE), true).show()
     }
 
 
@@ -128,15 +137,19 @@ class ShareFragment : Fragment() {
         viewModel.imageUrl.observe(viewLifecycleOwner) { imageUrl ->
             if (imageUrl.isNotEmpty()) {
                 viewModel.submitPost(title, description, participants, imageUrl, date)
+                viewModel.submitStatus.observe(viewLifecycleOwner) { status ->
+                    if (status) {
+                        toastGoster("Gönderi başarıyla oluşturuldu.")
+                        findNavController().navigate(R.id.action_shareFragment_to_homeFragment)
+                    } else {
+                        toastGoster("Gönderi oluşturulamadı.")
+                    }
+                }
             } else {
-                toastGoster("Resim yüklenemedi, tekrar deneyiniz.")
+                toastGoster("Resim yüklenemedi.")
             }
         }
-        viewModel.uploadStatus.observe(viewLifecycleOwner) { status ->
-            toastGoster(status)
-        }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
