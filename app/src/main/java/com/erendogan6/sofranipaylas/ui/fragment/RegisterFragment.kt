@@ -16,20 +16,29 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class RegisterFragment : Fragment() {
     private val viewModel: UserViewModel by viewModels()
-    private lateinit var binding: FragmentRegisterBinding
+    private var _binding: FragmentRegisterBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        _binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.registerButton.setOnClickListener {
+            val name = binding.nameEditText.text.toString().trim()
+            val surname = binding.surnameEditText.text.toString().trim()
             val email = binding.emailRegisterEditText.text.toString().trim()
             val password = binding.passwordRegisterEditText.text.toString().trim()
-            val fullname = binding.fullnameEditText.text.toString().trim()
+            val phone = binding.phoneEditText.text.toString().trim()
+            val userName = binding.userNameEditText.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty() || fullname.isEmpty()) {
+            if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || password.isEmpty() || phone.isEmpty() || userName.isEmpty()) {
                 Toast.makeText(activity, "All fields are required.", Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.register(email, password, fullname)
+                viewModel.register(email, password, name, surname, phone, userName)
             }
         }
 
@@ -41,8 +50,10 @@ class RegisterFragment : Fragment() {
                 Toast.makeText(activity, "Registration failed.", Toast.LENGTH_SHORT).show()
             }
         }
-
-        return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

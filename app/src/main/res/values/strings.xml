@@ -20,4 +20,8 @@
     <string name="logo">Logo</string>
     <string name="paylasim_resim">Paylaşım Resim</string>
     <string name="Cikis_yap">Çıkış Yap</string>
+    <string name="user_name">Kullanıcı Adı</string>
+    <string name="phone">Telefon Numarası</string>
+    <string name="name">Ad</string>
+    <string name="surname">Soyad</string>
 </resources>
