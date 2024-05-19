@@ -17,8 +17,8 @@ data class Post(
     @PropertyName("hostID")
     val hostID: String = "",
 
-    @PropertyName("images")
-    val images: List<String> = listOf(),
+    @PropertyName("image")
+    val image: String = "",
 
     @PropertyName("location")
     val location: GeoPoint = GeoPoint(0.0, 0.0),
@@ -35,4 +35,4 @@ data class Post(
     @PropertyName("title")
     val title: String = "",
 
-    var hostEmail: String = "")
+    var hostUserName: String = "")
