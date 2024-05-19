@@ -1,18 +1,29 @@
 package com.erendogan6.sofranipaylas.adapter
 
+import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.erendogan6.sofranipaylas.databinding.EventItemBinding
 import com.erendogan6.sofranipaylas.model.Post
+import java.util.Locale
 
 class HomeAdapter : ListAdapter<Post, HomeAdapter.ViewHolder>(DiffCallback()) {
 
     class ViewHolder(private val binding: EventItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(post: Post) {
             binding.eventTitle.text = post.title
+            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            binding.eventDate.text = formatter.format(post.date.toDate())
+            binding.eventDesc.text = post.description
+            post.images.let {
+                if (it.isNotEmpty()) {
+                    Glide.with(binding.root.context).load(it[0]).into(binding.eventImageView)
+                }
+            }
         }
     }
 
