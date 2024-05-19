@@ -1,6 +1,7 @@
 package com.erendogan6.sofranipaylas.viewmodel
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -41,9 +42,11 @@ class ShareViewModel @Inject constructor(private val repository: Repository) : V
                 result.onSuccess {
                     _submitStatus.value = true
                 }.onFailure { throwable ->
-                    _submitStatus.value = true
+                    Log.e("submitPost", "Error in ViewModel", throwable)
+                    _submitStatus.value = false
                 }
             }
         }
     }
+    
 }
