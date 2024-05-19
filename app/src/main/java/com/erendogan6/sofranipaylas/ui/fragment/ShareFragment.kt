@@ -22,6 +22,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.erendogan6.sofranipaylas.R
 import com.erendogan6.sofranipaylas.databinding.FragmentShareBinding
+import com.erendogan6.sofranipaylas.extensions.checkUserSessionAndNavigate
 import com.erendogan6.sofranipaylas.viewmodel.ShareViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
@@ -54,6 +55,7 @@ class ShareFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentShareBinding.inflate(inflater, container, false)
+        checkUserSessionAndNavigate()
         return binding.root
     }
 
@@ -117,6 +119,7 @@ class ShareFragment : Fragment() {
             val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
             val formattedDateTime = formatter.format(pickedDateTime.time)
             binding.dateText.setText(formattedDateTime)
+            selectedDate = Timestamp(pickedDateTime.time)
         }, timeCalendar.get(Calendar.HOUR_OF_DAY), timeCalendar.get(Calendar.MINUTE), true).show()
     }
 

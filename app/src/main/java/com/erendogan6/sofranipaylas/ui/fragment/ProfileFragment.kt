@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.erendogan6.sofranipaylas.databinding.FragmentProfileBinding
+import com.erendogan6.sofranipaylas.extensions.checkUserSessionAndNavigate
 import com.erendogan6.sofranipaylas.ui.activity.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +19,7 @@ class ProfileFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
-
+        checkUserSessionAndNavigate()
         binding.logoutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(requireContext(), LoginActivity::class.java)

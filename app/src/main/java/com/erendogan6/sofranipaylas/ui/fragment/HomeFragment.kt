@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.erendogan6.sofranipaylas.adapter.HomeAdapter
 import com.erendogan6.sofranipaylas.databinding.FragmentHomeBinding
+import com.erendogan6.sofranipaylas.extensions.checkUserSessionAndNavigate
 import com.erendogan6.sofranipaylas.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        checkUserSessionAndNavigate()
         setupRecyclerView()
         observePosts()
         return binding.root
