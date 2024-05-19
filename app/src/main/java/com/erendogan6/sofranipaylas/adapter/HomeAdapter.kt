@@ -19,12 +19,12 @@ class HomeAdapter : ListAdapter<Post, HomeAdapter.ViewHolder>(DiffCallback()) {
             val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
             binding.eventDate.text = formatter.format(post.date.toDate())
             binding.eventDesc.text = post.description
-            post.images.let {
+            post.image.let {
                 if (it.isNotEmpty()) {
-                    Glide.with(binding.root.context).load(it[0]).into(binding.eventImageView)
+                    Glide.with(binding.root.context).load(it).into(binding.eventImageView)
                 }
             }
-            binding.email.text = post.hostEmail
+            binding.usernameTextView.text = post.hostUserName
         }
     }
 
