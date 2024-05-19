@@ -24,6 +24,7 @@ class HomeAdapter : ListAdapter<Post, HomeAdapter.ViewHolder>(DiffCallback()) {
                     Glide.with(binding.root.context).load(it[0]).into(binding.eventImageView)
                 }
             }
+            binding.email.text = post.hostEmail
         }
     }
 

@@ -33,4 +33,6 @@ data class Post(
     val relatedFoods: List<String> = listOf(),
 
     @PropertyName("title")
-    val title: String = "")
+    val title: String = "",
+
+    var hostEmail: String = "")
