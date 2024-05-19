@@ -18,4 +18,5 @@
     <string name="select_image">Resim Seç</string>
     <string name="submit">Paylaşımı Onayla</string>
     <string name="logo">Logo</string>
+    <string name="paylasim_resim">Paylaşım Resim</string>
 </resources>
