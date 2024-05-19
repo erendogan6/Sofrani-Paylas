@@ -2,46 +2,85 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="15dp">
 
+    <!-- Kullanıcı Bilgisi -->
     <LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp">
 
         <ImageView
-            android:id="@+id/eventImageView"
+            android:id="@+id/profilKucukResim"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/blank_icon" />
+
+        <TextView
+            android:id="@+id/email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/paylasim_resim" />
-
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/lato_bold"
+            android:text="test@hotmail.com"
+            android:textColor="#000000"
+            android:textSize="22sp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/eventTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/baslik"
-        android:textSize="24sp" />
+    <!-- Etkinlik Resmi -->
+    <ImageView
+        android:id="@+id/eventImageView"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_margin="10dp"
+        android:scaleType="fitCenter" />
 
+    <!-- Başlık ve Tarih Aynı Satırda -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/eventTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/lato_bold"
+            android:text="Başlık"
+            android:textColor="#000000"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/eventDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/lato"
+            android:gravity="end"
+            android:text="Tarih"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <!-- Etkinlik Açıklaması -->
     <TextView
         android:id="@+id/eventDesc"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/aciklama"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/eventDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/tarih"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="@font/lato"
+        android:text="Açıklama"
+        android:textColor="#000000"
         android:textSize="18sp" />
 
 </LinearLayout>
