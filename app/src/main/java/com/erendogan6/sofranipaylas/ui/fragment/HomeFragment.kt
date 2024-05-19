@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
             adapter = this@HomeFragment.adapter
         }
     }
-    
+
     private fun observePosts() {
         lifecycleScope.launch {
             viewModel.posts.observe(viewLifecycleOwner) { posts ->
@@ -46,5 +46,10 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getPosts()
     }
 }
