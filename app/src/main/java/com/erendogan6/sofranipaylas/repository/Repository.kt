@@ -71,7 +71,7 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
     suspend fun submitPost(title: String, description: String, participants: Int, imageUrl: String, date: Timestamp): Flow<Result<Boolean>> = flow {
         try {
             val currentUserID = firebaseAuth.currentUser?.uid.orEmpty()
-            val post = Post(title = title, description = description, participants = participants, images = imageUrl, date = date, status = true, userID = currentUserID)
+            val post = Post(title = title, description = description, maxParticipants = participants, images = listOf(imageUrl), date = date, eventStatus = true, hostID = currentUserID)
             firestore.collection("Posts").add(post).await()
             emit(Result.success(true))
         } catch (e: Exception) {
