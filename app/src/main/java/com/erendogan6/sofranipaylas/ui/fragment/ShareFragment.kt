@@ -18,7 +18,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.erendogan6.sofranipaylas.R
 import com.erendogan6.sofranipaylas.databinding.FragmentShareBinding
@@ -26,6 +27,7 @@ import com.erendogan6.sofranipaylas.extensions.checkUserSessionAndNavigate
 import com.erendogan6.sofranipaylas.viewmodel.ShareViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.GeoPoint
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
@@ -34,13 +36,14 @@ class ShareFragment : Fragment() {
     private var selectedImageUri: Uri? = null
     private var _binding: FragmentShareBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: ShareViewModel by viewModels()
+    private val viewModel: ShareViewModel by activityViewModels()
     private var selectedDate: Timestamp? = null
 
 
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == AppCompatActivity.RESULT_OK && result.data != null) {
             selectedImageUri = result.data!!.data
+            viewModel.setSelectedImageUri(selectedImageUri)
             binding.shareImage.setImageURI(selectedImageUri)
         }
     }
@@ -62,6 +65,7 @@ class ShareFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupObservers()
         binding.dateText.setOnClickListener {
             showDatePickerDialog()
         }
@@ -72,6 +76,22 @@ class ShareFragment : Fragment() {
 
         binding.submitButton.setOnClickListener {
             submitPost()
+        }
+
+        binding.locationPickerButton.setOnClickListener {
+            findNavController().navigate(R.id.action_shareFragment_to_locationPickerFragment)
+        }
+    }
+
+    private fun setupObservers() {
+        viewModel.selectedImageUri.observe(viewLifecycleOwner, Observer { uri ->
+            binding.shareImage.setImageURI(uri)
+        })
+
+        viewModel.selectedLocation.observe(viewLifecycleOwner) { location ->
+            location?.let {
+                binding.locationTextView.text = "Seçilen Konum: (${it.latitude}, ${it.longitude})"
+            }
         }
     }
 
@@ -130,6 +150,7 @@ class ShareFragment : Fragment() {
         val participants = binding.participantsEditText.text.toString().toIntOrNull() ?: 0
         val imageUri = selectedImageUri
         val date = selectedDate ?: Timestamp.now()
+        val location = GeoPoint(viewModel.selectedLocation.value?.latitude ?: 0.0, viewModel.selectedLocation.value?.longitude ?: 0.0)
 
         if (title.isEmpty() || description.isEmpty() || imageUri == null) {
             toastGoster("Başlık, açıklama ve bir resim eklemelisiniz.")
@@ -139,7 +160,7 @@ class ShareFragment : Fragment() {
         viewModel.uploadImage(imageUri)
         viewModel.imageUrl.observe(viewLifecycleOwner) { imageUrl ->
             if (imageUrl.isNotEmpty()) {
-                viewModel.submitPost(title, description, participants, imageUrl, date)
+                viewModel.submitPost(title, description, participants, imageUrl, date, location)
                 viewModel.submitStatus.observe(viewLifecycleOwner) { status ->
                     if (status) {
                         toastGoster("Gönderi başarıyla oluşturuldu.")
