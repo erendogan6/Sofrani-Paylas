@@ -21,7 +21,7 @@ class HomeViewModel @Inject constructor(private val repository: Repository) : Vi
 
     fun getPosts() {
         viewModelScope.launch {
-            repository.getPosts().collect() { postList ->
+            repository.getPosts().collect { postList ->
                 _posts.value = postList
             }
         }

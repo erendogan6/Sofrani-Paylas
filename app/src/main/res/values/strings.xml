@@ -24,4 +24,5 @@
     <string name="phone">Telefon Numarası</string>
     <string name="name">Ad</string>
     <string name="surname">Soyad</string>
+    <string name="profil_resmi">Profil Resmi</string>
 </resources>
