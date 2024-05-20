@@ -7,7 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.erendogan6.sofranipaylas.repository.Repository
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.GeoPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,6 +25,19 @@ class ShareViewModel @Inject constructor(private val repository: Repository) : V
     private val _imageUrl = MutableLiveData<String>()
     val imageUrl: LiveData<String> = _imageUrl
 
+    private val _selectedImageUri = MutableLiveData<Uri?>()
+    val selectedImageUri: LiveData<Uri?> get() = _selectedImageUri
+
+    private val _selectedLocation = MutableLiveData<LatLng?>()
+    val selectedLocation: LiveData<LatLng?> get() = _selectedLocation
+    fun setSelectedLocation(location: LatLng?) {
+        _selectedLocation.value = location
+    }
+
+    fun setSelectedImageUri(uri: Uri?) {
+        _selectedImageUri.value = uri
+    }
+
     fun uploadImage(imageUri: Uri) {
         viewModelScope.launch {
             repository.uploadImageAndGetUrl(imageUri).collect { result ->
@@ -36,9 +51,9 @@ class ShareViewModel @Inject constructor(private val repository: Repository) : V
         }
     }
 
-    fun submitPost(title: String, description: String, participants: Int, imageUrl: String, date: Timestamp) {
+    fun submitPost(title: String, description: String, participants: Int, imageUrl: String, date: Timestamp, location: GeoPoint) {
         viewModelScope.launch {
-            repository.submitPost(title, description, participants, imageUrl, date).collect { result ->
+            repository.submitPost(title, description, participants, imageUrl, date, location).collect { result ->
                 result.onSuccess {
                     _submitStatus.value = true
                 }.onFailure { throwable ->
@@ -48,5 +63,5 @@ class ShareViewModel @Inject constructor(private val repository: Repository) : V
             }
         }
     }
-    
+
 }
