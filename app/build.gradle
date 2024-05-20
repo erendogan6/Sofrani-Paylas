@@ -39,6 +39,9 @@ android {
 }
 
 dependencies {
+    //Google Maps
+    implementation libs.play.services.maps
+
     //HILT
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
