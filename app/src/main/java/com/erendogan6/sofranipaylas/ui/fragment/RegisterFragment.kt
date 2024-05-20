@@ -34,11 +34,12 @@ class RegisterFragment : Fragment() {
             val password = binding.passwordRegisterEditText.text.toString().trim()
             val phone = binding.phoneEditText.text.toString().trim()
             val userName = binding.userNameEditText.text.toString().trim()
+            val isHost = binding.userTypeSwitch.isChecked
 
             if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || password.isEmpty() || phone.isEmpty() || userName.isEmpty()) {
                 Toast.makeText(activity, "All fields are required.", Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.register(email, password, name, surname, phone, userName)
+                viewModel.register(email, password, name, surname, phone, userName, isHost)
             }
         }
 

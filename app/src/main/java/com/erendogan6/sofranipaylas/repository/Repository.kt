@@ -43,14 +43,14 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
     }
 
 
-    suspend fun registerUser(email: String, password: String, name: String, surname: String, phone: String, userName: String): Flow<Boolean> = flow {
+    suspend fun registerUser(email: String, password: String, name: String, surname: String, phone: String, userName: String, isHost: Boolean): Flow<Boolean> = flow {
         try {
             val authResult = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             val firebaseUser = authResult.user
 
             if (firebaseUser != null) {
                 val userId = firebaseUser.uid
-                val user = User(about = "", email = email, isHost = false, name = name, surname = surname, phone = phone, profilePicture = "", role = "user", userName = userName)
+                val user = User(about = "", email = email, name = name, surname = surname, phone = phone, profilePicture = "", role = "user", userName = userName, isHost = isHost)
                 firestore.collection("Users").document(userId).set(user).await()
                 emit(true)
             } else {
