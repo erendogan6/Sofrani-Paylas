@@ -7,6 +7,7 @@ import com.erendogan6.sofranipaylas.model.User
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -73,13 +74,14 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
         }
     }
 
-    suspend fun submitPost(title: String, description: String, participants: Int, imageUrl: String, date: Timestamp): Flow<Result<Boolean>> = flow {
+    suspend fun submitPost(title: String, description: String, participants: Int, imageUrl: String, date: Timestamp, location: GeoPoint): Flow<Result<Boolean>> = flow {
         try {
             val currentUserID = firebaseAuth.currentUser?.uid.orEmpty()
             Log.d("submitPost", "Current User ID: $currentUserID")
 
             if (currentUserID.isNotEmpty()) {
-                val post = Post(title = title, description = description, maxParticipants = participants, image = imageUrl, date = date, eventStatus = true, hostID = currentUserID)
+                val post =
+                    Post(title = title, description = description, maxParticipants = participants, image = imageUrl, date = date, eventStatus = true, hostID = currentUserID, location = location)
                 Log.d("submitPost", "Post Data: $post")
 
                 firestore.collection("Posts").add(post).await()
