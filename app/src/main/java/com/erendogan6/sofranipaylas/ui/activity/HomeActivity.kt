@@ -2,27 +2,20 @@ package com.erendogan6.sofranipaylas.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.erendogan6.sofranipaylas.R
-import com.erendogan6.sofranipaylas.databinding.ActivityHomeBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityHomeBinding
-
+    private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_home)
 
-        val navView: BottomNavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_activity_home)
-        navView.setupWithNavController(navController)
-
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_home) as NavHostFragment
+        navController = navHostFragment.navController
     }
 }
