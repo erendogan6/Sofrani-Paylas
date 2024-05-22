@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
@@ -15,9 +16,9 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/profilKucukResim"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:contentDescription="@string/etkinlik_sahibi_profil_resmi"
             android:src="@drawable/blank_icon" />
 
         <TextView
@@ -29,13 +30,14 @@
             android:fontFamily="@font/lato_bold"
             android:text="Kullanıcı Adı"
             android:textColor="#000000"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            tools:ignore="HardcodedText" />
 
         <ImageView
-            android:id="@+id/detailArrowImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight=".10"
+            android:contentDescription="@string/etkinlik_detaylarini_incele"
             android:src="@drawable/arrow_icon" />
     </LinearLayout>
 
@@ -47,6 +49,7 @@
         android:layout_height="350dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
+        android:contentDescription="@string/etkinlik_resmi"
         android:scaleType="fitCenter" />
 
     <TextView
@@ -60,7 +63,8 @@
         android:gravity="center_vertical"
         android:text="Başlık"
         android:textColor="#000000"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        tools:ignore="HardcodedText" />
 
 
     <TextView
@@ -75,7 +79,8 @@
         android:gravity="center_vertical"
         android:text="Tarih"
         android:textColor="#000000"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        tools:ignore="HardcodedText" />
 
     <!-- Etkinlik Açıklaması -->
     <TextView
@@ -89,6 +94,7 @@
         android:gravity="center_vertical"
         android:text="Açıklama"
         android:textColor="#000000"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>
