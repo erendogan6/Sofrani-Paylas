@@ -35,4 +35,7 @@ data class Post(
     @PropertyName("title")
     val title: String = "",
 
-    var hostUserName: String = "")
+    var hostUserName: String = "",
+
+    var postID: String = "",
+)
