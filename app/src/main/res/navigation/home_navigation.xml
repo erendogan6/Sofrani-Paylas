@@ -14,7 +14,11 @@
         android:id="@+id/profileFragment"
         android:name="com.erendogan6.sofranipaylas.ui.fragment.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+    </fragment>
     <fragment
         android:id="@+id/shareFragment"
         android:name="com.erendogan6.sofranipaylas.ui.fragment.ShareFragment"
@@ -54,5 +58,14 @@
             android:name="longitude"
             android:defaultValue="0.0"
             app:argType="float" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.erendogan6.sofranipaylas.ui.fragment.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password">
+        <action
+            android:id="@+id/action_changePasswordFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 </navigation>
