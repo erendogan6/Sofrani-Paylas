@@ -79,14 +79,41 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
         }
     }
 
-    suspend fun uploadImageAndGetUrl(imageUri: Uri): Flow<Result<String>> = flow {
+    suspend fun uploadImageAndGetUrl(imageUri: Uri, path: String): Flow<Result<String>> = flow {
         try {
-            val imageRef = storage.reference.child("images/${imageUri.lastPathSegment}")
+            val imageRef = storage.reference.child("$path/${imageUri.lastPathSegment}")
             val uploadTaskSnapshot = imageRef.putFile(imageUri).await()
             val imageUrl = uploadTaskSnapshot.metadata?.reference?.downloadUrl?.await().toString()
             emit(Result.success(imageUrl))
         } catch (e: Exception) {
             emit(Result.failure(e))
+        }
+    }
+
+
+    suspend fun updateProfilePicture(imageUri: Uri): Flow<Result<String>> = flow {
+        val user = firebaseAuth.currentUser
+        if (user != null) {
+            try {
+                uploadImageAndGetUrl(imageUri, "profile/${user.uid}").collect { result ->
+                    if (result.isSuccess) {
+                        val imageUrl = result.getOrNull()
+                        if (imageUrl != null) {
+                            val userDocRef = firestore.collection("Users").document(user.uid)
+                            userDocRef.update("profilePicture", imageUrl).await()
+                            emit(Result.success(imageUrl))
+                        } else {
+                            emit(Result.failure(Exception("Image URL is null")))
+                        }
+                    } else {
+                        emit(Result.failure(result.exceptionOrNull() ?: Exception("Unknown error")))
+                    }
+                }
+            } catch (e: Exception) {
+                emit(Result.failure(e))
+            }
+        } else {
+            emit(Result.failure(Exception("User not authenticated")))
         }
     }
 
