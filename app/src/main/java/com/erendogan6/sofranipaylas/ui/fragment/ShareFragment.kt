@@ -85,7 +85,7 @@ class ShareFragment : Fragment() {
         viewModel.selectedLocation.observe(viewLifecycleOwner) { location ->
             location?.let {
                 binding.locationTextView.text = "Seçilen Konum: (${it.latitude}, ${it.longitude})"
-                viewModel.fetchAddress(requireContext(), it)
+                viewModel.fetchAddress(it)
             }
         }
 

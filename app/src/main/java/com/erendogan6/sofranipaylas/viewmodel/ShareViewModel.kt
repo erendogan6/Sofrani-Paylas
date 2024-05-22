@@ -1,6 +1,5 @@
 package com.erendogan6.sofranipaylas.viewmodel
 
-import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -68,9 +67,9 @@ class ShareViewModel @Inject constructor(private val repository: Repository) : V
         }
     }
 
-    fun fetchAddress(context: Context, latLng: LatLng) {
+    fun fetchAddress(latLng: LatLng) {
         viewModelScope.launch {
-            val address = repository.fetchAddress(context, latLng)
+            val address = repository.fetchAddress(latLng)
             _address.value = address ?: "Adres bulunamadı"
         }
     }

@@ -24,7 +24,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, private val firestore: FirebaseFirestore, private val storage: FirebaseStorage) {
+class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, private val firestore: FirebaseFirestore, private val storage: FirebaseStorage, private val context: Context) {
 
     suspend fun changePassword(currentPassword: String, newPassword: String): Flow<Boolean> = flow {
         val user = firebaseAuth.currentUser
@@ -184,7 +184,7 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
         }
     }
 
-    suspend fun fetchAddress(context: Context, latLng: LatLng): String? {
+    suspend fun fetchAddress(latLng: LatLng): String? {
         return withContext(Dispatchers.IO) {
             val geocoder = Geocoder(context, Locale.getDefault())
             var result: String? = null
