@@ -2,16 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
     android:orientation="vertical"
-    android:padding="15dp">
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
 
     <!-- Kullanıcı Bilgisi -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingVertical="10dp">
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/profilKucukResim"
@@ -21,63 +22,71 @@
 
         <TextView
             android:id="@+id/usernameTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:layout_weight=".90"
             android:fontFamily="@font/lato_bold"
             android:text="Kullanıcı Adı"
             android:textColor="#000000"
             android:textSize="22sp" />
+
+        <ImageView
+            android:id="@+id/detailArrowImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".10"
+            android:src="@drawable/arrow_icon" />
     </LinearLayout>
 
     <!-- Etkinlik Resmi -->
+
     <ImageView
         android:id="@+id/eventImageView"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_margin="10dp"
+        android:layout_height="350dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:scaleType="fitCenter" />
 
-    <!-- Başlık ve Tarih Aynı Satırda -->
-    <LinearLayout
+    <TextView
+        android:id="@+id/eventTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:orientation="horizontal">
+        android:drawableLeft="@drawable/open_icon"
+        android:drawablePadding="10dp"
+        android:fontFamily="@font/lato_bold"
+        android:gravity="center_vertical"
+        android:text="Başlık"
+        android:textColor="#000000"
+        android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/eventTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="@font/lato_bold"
-            android:text="Başlık"
-            android:textColor="#000000"
-            android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/eventDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:fontFamily="@font/lato"
-            android:gravity="end"
-            android:text="Tarih"
-            android:textColor="#000000"
-            android:textSize="18sp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/eventDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/calendar_icon"
+        android:drawablePadding="6dp"
+        android:fontFamily="@font/lato"
+        android:gravity="center_vertical"
+        android:text="Tarih"
+        android:textColor="#000000"
+        android:textSize="18sp" />
 
     <!-- Etkinlik Açıklaması -->
     <TextView
         android:id="@+id/eventDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/title_icon"
+        android:drawablePadding="10dp"
         android:fontFamily="@font/lato"
+        android:gravity="center_vertical"
         android:text="Açıklama"
         android:textColor="#000000"
         android:textSize="18sp" />
