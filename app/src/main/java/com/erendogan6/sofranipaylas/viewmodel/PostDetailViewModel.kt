@@ -11,6 +11,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,8 +27,11 @@ class PostDetailViewModel @Inject constructor(private val repository: Repository
     private val _isAlreadyJoined = MutableLiveData<Boolean>()
     val isAlreadyJoined: LiveData<Boolean> = _isAlreadyJoined
 
-    private val _address = MutableLiveData<String?>()
-    val address: LiveData<String?> = _address
+    private val _address = MutableLiveData<String>()
+    val address: LiveData<String> = _address
+
+    private val _formattedDate = MutableLiveData<String>()
+    val formattedDate: LiveData<String> = _formattedDate
 
     fun loadPostDetails(postId: String) {
         viewModelScope.launch {
@@ -36,6 +41,7 @@ class PostDetailViewModel @Inject constructor(private val repository: Repository
                     _post.value = result
                     checkIfAlreadyJoined(result)
                     fetchAddress(LatLng(result.latitude, result.longitude))
+                    formatPostDate(result.date)
                     Log.d("PostDetailViewModel", "Post loaded successfully: $result")
                 } else {
                     Log.e("PostDetailViewModel", "Failed to load post with id: $postId")
@@ -45,7 +51,6 @@ class PostDetailViewModel @Inject constructor(private val repository: Repository
             }
         }
     }
-
 
     fun joinPost(postId: String) {
         viewModelScope.launch {
@@ -64,5 +69,11 @@ class PostDetailViewModel @Inject constructor(private val repository: Repository
             val address = repository.fetchAddress(latLng)
             _address.value = address
         }
+    }
+
+    private fun formatPostDate(date: com.google.firebase.Timestamp) {
+        val sdf = SimpleDateFormat("dd MMMM yyyy, EEEE", Locale.getDefault())
+        val formattedDate = sdf.format(date.toDate())
+        _formattedDate.value = formattedDate
     }
 }

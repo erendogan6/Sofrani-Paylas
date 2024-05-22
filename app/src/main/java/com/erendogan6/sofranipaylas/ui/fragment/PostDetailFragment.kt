@@ -53,6 +53,10 @@ class PostDetailFragment : Fragment() {
         viewModel.address.observe(viewLifecycleOwner) { address ->
             binding.detailAddress.text = address
         }
+
+        viewModel.formattedDate.observe(viewLifecycleOwner) { formattedDate ->
+            binding.detailDate.text = formattedDate
+        }
     }
 
     private fun setupJoinButton() {
@@ -63,7 +67,6 @@ class PostDetailFragment : Fragment() {
 
     private fun bindPostDetails(post: Post) {
         binding.detailTitle.text = post.title
-        binding.detailDate.text = post.date.toDate().toString()
         binding.detailDescription.text = post.description
         Glide.with(this).load(post.image).into(binding.detailImage)
 
