@@ -6,8 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
-import android.location.Geocoder
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -20,33 +18,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.erendogan6.sofranipaylas.R
 import com.erendogan6.sofranipaylas.databinding.FragmentShareBinding
 import com.erendogan6.sofranipaylas.extensions.checkUserSessionAndNavigate
 import com.erendogan6.sofranipaylas.viewmodel.ShareViewModel
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.GeoPoint
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
 @AndroidEntryPoint
 class ShareFragment : Fragment() {
-    private var selectedImageUri: Uri? = null
     private var _binding: FragmentShareBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ShareViewModel by activityViewModels()
     private var selectedDate: Timestamp? = null
 
-
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == AppCompatActivity.RESULT_OK && result.data != null) {
-            selectedImageUri = result.data!!.data
+            val selectedImageUri = result.data!!.data
             viewModel.setSelectedImageUri(selectedImageUri)
-            binding.shareImage.setImageURI(selectedImageUri)
         }
     }
 
@@ -86,33 +78,19 @@ class ShareFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.selectedImageUri.observe(viewLifecycleOwner, Observer { uri ->
+        viewModel.selectedImageUri.observe(viewLifecycleOwner) { uri ->
             binding.shareImage.setImageURI(uri)
-        })
+        }
 
         viewModel.selectedLocation.observe(viewLifecycleOwner) { location ->
             location?.let {
                 binding.locationTextView.text = "Seçilen Konum: (${it.latitude}, ${it.longitude})"
-                val address = getAddressFromLatLng(it)
-                binding.locationTextView.text = address ?: "Adres bulunamadı"
+                viewModel.fetchAddress(requireContext(), it)
             }
         }
-    }
 
-    private fun getAddressFromLatLng(latLng: LatLng): String? {
-        val geocoder = Geocoder(requireContext(), Locale.getDefault())
-        return try {
-            val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-            addresses.let {
-                if (addresses?.isNotEmpty()!!) {
-                    val address = addresses[0]
-                    "${address.getAddressLine(0)}"
-                } else {
-                    null
-                }
-            }
-        } catch (e: Exception) {
-            null
+        viewModel.address.observe(viewLifecycleOwner) { address ->
+            binding.locationTextView.text = address
         }
     }
 
@@ -169,7 +147,7 @@ class ShareFragment : Fragment() {
         val title = binding.titleEditText.text.toString()
         val description = binding.descriptionEditText.text.toString()
         val participants = binding.participantsEditText.text.toString().toIntOrNull() ?: 0
-        val imageUri = selectedImageUri
+        val imageUri = viewModel.selectedImageUri.value
         val date = selectedDate ?: Timestamp.now()
         val latitude = viewModel.selectedLocation.value?.latitude ?: 0.0
         val longitude = viewModel.selectedLocation.value?.longitude ?: 0.0

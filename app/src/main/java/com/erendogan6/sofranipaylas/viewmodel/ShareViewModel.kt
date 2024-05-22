@@ -1,5 +1,6 @@
 package com.erendogan6.sofranipaylas.viewmodel
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -9,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import com.erendogan6.sofranipaylas.repository.Repository
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.GeoPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,6 +30,10 @@ class ShareViewModel @Inject constructor(private val repository: Repository) : V
 
     private val _selectedLocation = MutableLiveData<LatLng?>()
     val selectedLocation: LiveData<LatLng?> get() = _selectedLocation
+
+    private val _address = MutableLiveData<String>()
+    val address: LiveData<String> get() = _address
+
     fun setSelectedLocation(location: LatLng?) {
         _selectedLocation.value = location
     }
@@ -64,4 +68,10 @@ class ShareViewModel @Inject constructor(private val repository: Repository) : V
         }
     }
 
+    fun fetchAddress(context: Context, latLng: LatLng) {
+        viewModelScope.launch {
+            val address = repository.fetchAddress(context, latLng)
+            _address.value = address ?: "Adres bulunamadı"
+        }
+    }
 }

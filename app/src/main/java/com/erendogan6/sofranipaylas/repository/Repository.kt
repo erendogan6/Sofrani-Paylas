@@ -1,18 +1,24 @@
 package com.erendogan6.sofranipaylas.repository
 
+import android.content.Context
+import android.location.Geocoder
 import android.net.Uri
 import android.util.Log
+import com.erendogan6.sofranipaylas.extensions.getAddress
 import com.erendogan6.sofranipaylas.model.Post
 import com.erendogan6.sofranipaylas.model.User
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -166,6 +172,17 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
             }
         } else {
             emit(null)
+        }
+    }
+
+    suspend fun fetchAddress(context: Context, latLng: LatLng): String? {
+        return withContext(Dispatchers.IO) {
+            val geocoder = Geocoder(context, Locale.getDefault())
+            var result: String? = null
+            geocoder.getAddress(latLng.latitude, latLng.longitude) { address ->
+                result = address?.getAddressLine(0)
+            }
+            result ?: "Adres bulunamadı"
         }
     }
 }
