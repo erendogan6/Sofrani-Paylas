@@ -72,7 +72,7 @@ class PostDetailViewModel @Inject constructor(private val repository: Repository
     }
 
     private fun formatPostDate(date: com.google.firebase.Timestamp) {
-        val sdf = SimpleDateFormat("dd MMMM yyyy, EEEE", Locale.getDefault())
+        val sdf = SimpleDateFormat("dd MMMM yyyy, EEEE, HH:mm", Locale.getDefault())
         val formattedDate = sdf.format(date.toDate())
         _formattedDate.value = formattedDate
     }
