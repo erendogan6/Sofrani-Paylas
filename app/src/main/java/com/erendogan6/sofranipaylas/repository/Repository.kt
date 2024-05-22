@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
@@ -145,17 +146,25 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
     }
 
     fun getPosts(): Flow<List<Post>> = flow {
-        val postsSnapshot = firestore.collection("Posts").get().await()
-        val posts = postsSnapshot.toObjects(Post::class.java)
+        try {
+            val postsSnapshot = firestore.collection("Posts").get().await()
+            val posts = postsSnapshot.map { document ->
+                val post = document.toObject(Post::class.java)
+                post.postID = document.id
 
-        for (post in posts) {
-            val userSnapshot = firestore.collection("Users").document(post.hostID).get().await()
-            val userName = userSnapshot.getString("userName") ?: ""
-            post.hostUserName = userName
+                val userSnapshot = firestore.collection("Users").document(post.hostID).get().await()
+                post.hostUserName = userSnapshot.getString("userName") ?: ""
+
+                post
+            }
+
+            emit(posts)
+        } catch (e: Exception) {
+            Log.e("Repository", "Error getting posts", e)
+            emit(emptyList())
         }
-
-        emit(posts)
     }
+
 
     fun getCurrentUser(): Flow<User?> = flow {
         val user = firebaseAuth.currentUser
@@ -185,4 +194,25 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
             result ?: "Adres bulunamadı"
         }
     }
+
+    suspend fun getPostById(postId: String): Post? {
+        return try {
+            val document = firestore.collection("Posts").document(postId).get().await()
+            document.toObject(Post::class.java)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    suspend fun joinPost(postId: String) {
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            val currentUserID = currentUser.uid
+            Log.d("Repository", "Current User ID: $currentUserID")
+            firestore.collection("Posts").document(postId).update("participants", FieldValue.arrayUnion(currentUserID)).await()
+        } else {
+            Log.e("Repository", "User not authenticated")
+        }
+    }
+
 }
