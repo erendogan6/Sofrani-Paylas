@@ -55,13 +55,27 @@ class ProfileFragment : Fragment() {
         }
 
         viewModel.uploadImageResult.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { imageUrl ->
-                Glide.with(this).load(imageUrl).transform(CircleCrop()).into(binding.profilResim)
-                Snackbar.make(binding.root, "Profil resmi başarıyla yüklendi", Snackbar.LENGTH_SHORT).show()
-            }.onFailure {
-                Snackbar.make(binding.root, "Profil resmi yüklenirken hata oluştu", Snackbar.LENGTH_SHORT).show()
+            result?.let {
+                it.onSuccess { imageUrl ->
+                    Glide.with(this).load(imageUrl).transform(CircleCrop()).into(binding.profilResim)
+                    Snackbar.make(binding.root, "Profil resmi başarıyla yüklendi", Snackbar.LENGTH_SHORT).show()
+                }.onFailure {
+                    Snackbar.make(binding.root, "Profil resmi yüklenirken hata oluştu", Snackbar.LENGTH_SHORT).show()
+                }
+                viewModel.resetUploadImageResult()
             }
         }
+
+        viewModel.currentUser.observe(viewLifecycleOwner) { user ->
+            user?.let {
+                binding.profilMail.text = it.email
+                if (it.profilePicture.isNotEmpty()) {
+                    Glide.with(this).load(it.profilePicture).transform(CircleCrop()).into(binding.profilResim)
+                }
+            }
+        }
+
+        viewModel.getCurrentUser()
 
         return binding.root
     }
