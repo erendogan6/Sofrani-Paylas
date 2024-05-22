@@ -18,19 +18,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="@color/black"
+        android:textSize="24sp"
         tools:text="Event Title" />
 
     <TextView
         android:id="@+id/detailDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="20sp"
         tools:text="2023-05-10 14:30" />
 
     <TextView
         android:id="@+id/detailDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="20sp"
         tools:text="Description of the event" />
+
+    <TextView
+        android:id="@+id/detailAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/map_icon"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        tools:text="Event Address" />
 
     <Button
         android:id="@+id/joinButton"

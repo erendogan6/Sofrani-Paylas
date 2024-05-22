@@ -88,6 +88,20 @@
         <action
             android:id="@+id/action_postDetailFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_postDetailFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.erendogan6.sofranipaylas.ui.fragment.MapFragment"
+        android:label="MapFragment">
+        <argument
+            android:name="latitude"
+            app:argType="float" />
+        <argument
+            android:name="longitude"
+            app:argType="float" />
     </fragment>
 
 </navigation>

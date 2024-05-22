@@ -49,6 +49,10 @@ class PostDetailFragment : Fragment() {
         viewModel.isAlreadyJoined.observe(viewLifecycleOwner) { isJoined ->
             updateJoinButtonState(isJoined)
         }
+
+        viewModel.address.observe(viewLifecycleOwner) { address ->
+            binding.detailAddress.text = address
+        }
     }
 
     private fun setupJoinButton() {
@@ -62,6 +66,11 @@ class PostDetailFragment : Fragment() {
         binding.detailDate.text = post.date.toDate().toString()
         binding.detailDescription.text = post.description
         Glide.with(this).load(post.image).into(binding.detailImage)
+
+        binding.detailAddress.setOnClickListener {
+            val action = PostDetailFragmentDirections.actionPostDetailFragmentToMapFragment(post.latitude.toFloat(), post.longitude.toFloat())
+            findNavController().navigate(action)
+        }
     }
 
     private fun handleJoinStatus(result: Result<Boolean>) {

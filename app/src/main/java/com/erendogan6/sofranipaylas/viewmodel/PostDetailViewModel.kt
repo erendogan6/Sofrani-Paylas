@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.erendogan6.sofranipaylas.model.Post
 import com.erendogan6.sofranipaylas.repository.Repository
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,6 +25,9 @@ class PostDetailViewModel @Inject constructor(private val repository: Repository
     private val _isAlreadyJoined = MutableLiveData<Boolean>()
     val isAlreadyJoined: LiveData<Boolean> = _isAlreadyJoined
 
+    private val _address = MutableLiveData<String?>()
+    val address: LiveData<String?> = _address
+
     fun loadPostDetails(postId: String) {
         viewModelScope.launch {
             try {
@@ -31,6 +35,7 @@ class PostDetailViewModel @Inject constructor(private val repository: Repository
                 if (result != null) {
                     _post.value = result
                     checkIfAlreadyJoined(result)
+                    fetchAddress(LatLng(result.latitude, result.longitude))
                     Log.d("PostDetailViewModel", "Post loaded successfully: $result")
                 } else {
                     Log.e("PostDetailViewModel", "Failed to load post with id: $postId")
@@ -52,5 +57,12 @@ class PostDetailViewModel @Inject constructor(private val repository: Repository
     private fun checkIfAlreadyJoined(post: Post) {
         val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
         _isAlreadyJoined.value = post.participants?.contains(currentUserID) == true
+    }
+
+    private fun fetchAddress(latLng: LatLng) {
+        viewModelScope.launch {
+            val address = repository.fetchAddress(latLng)
+            _address.value = address
+        }
     }
 }
