@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.erendogan6.sofranipaylas.databinding.FragmentProfileBinding
 import com.erendogan6.sofranipaylas.extensions.checkUserSessionAndNavigate
+import com.erendogan6.sofranipaylas.model.User
 import com.erendogan6.sofranipaylas.ui.activity.LoginActivity
 import com.erendogan6.sofranipaylas.viewmodel.ProfileViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -23,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
+
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ProfileViewModel by viewModels()
@@ -31,36 +33,44 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         checkUserSessionAndNavigate()
+        setupImagePicker()
+        setupClickListeners()
+        observeViewModel()
 
+        viewModel.getCurrentUser()
+
+        return binding.root
+    }
+
+    private fun setupImagePicker() {
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val imageUri: Uri? = result.data?.data
-                if (imageUri != null) {
-                    viewModel.uploadProfileImage(imageUri)
+                imageUri?.let {
+                    viewModel.uploadProfileImage(it)
                 }
             }
         }
+    }
 
+    private fun setupClickListeners() {
         binding.cikisYapLayout.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            val intent = Intent(requireContext(), LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+            signOut()
         }
 
         binding.profilResimLayout.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            imagePickerLauncher.launch(intent)
+            pickImage()
         }
+    }
 
+    private fun observeViewModel() {
         viewModel.uploadImageResult.observe(viewLifecycleOwner) { result ->
             result?.let {
                 it.onSuccess { imageUrl ->
-                    Glide.with(this).load(imageUrl).transform(CircleCrop()).into(binding.profilResim)
-                    Snackbar.make(binding.root, "Profil resmi başarıyla yüklendi", Snackbar.LENGTH_SHORT).show()
-                }.onFailure {
-                    Snackbar.make(binding.root, "Profil resmi yüklenirken hata oluştu", Snackbar.LENGTH_SHORT).show()
+                    updateProfileImage(imageUrl)
+                    showSnackbar("Profil resmi başarıyla yüklendi")
+                }.onFailure { throwable ->
+                    showSnackbar("Profil resmi yüklenirken hata oluştu: ${throwable.message}")
                 }
                 viewModel.resetUploadImageResult()
             }
@@ -68,17 +78,39 @@ class ProfileFragment : Fragment() {
 
         viewModel.currentUser.observe(viewLifecycleOwner) { user ->
             user?.let {
-                binding.profilMail.text = it.email
-                binding.profileTextView.text = "Hoşgeldin " + it.userName
-                if (it.profilePicture.isNotEmpty()) {
-                    Glide.with(this).load(it.profilePicture).transform(CircleCrop()).into(binding.profilResim)
-                }
+                updateUserProfile(it)
             }
         }
+    }
 
-        viewModel.getCurrentUser()
+    private fun updateProfileImage(imageUrl: String) {
+        Glide.with(this).load(imageUrl).transform(CircleCrop()).into(binding.profilResim)
+    }
 
-        return binding.root
+    private fun updateUserProfile(user: User) {
+        binding.profilMail.text = user.email
+        binding.profileTextView.text = "Hoşgeldin ${user.userName}"
+        if (user.profilePicture.isNotEmpty()) {
+            updateProfileImage(user.profilePicture)
+        }
+    }
+
+    private fun signOut() {
+        FirebaseAuth.getInstance().signOut()
+        val intent = Intent(requireContext(), LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+    }
+
+    private fun pickImage() {
+        val intent = Intent(Intent.ACTION_PICK).apply {
+            type = "image/*"
+        }
+        imagePickerLauncher.launch(intent)
+    }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
