@@ -69,6 +69,7 @@ class ProfileFragment : Fragment() {
         viewModel.currentUser.observe(viewLifecycleOwner) { user ->
             user?.let {
                 binding.profilMail.text = it.email
+                binding.profileTextView.text = "Hoşgeldin " + it.userName
                 if (it.profilePicture.isNotEmpty()) {
                     Glide.with(this).load(it.profilePicture).transform(CircleCrop()).into(binding.profilResim)
                 }
