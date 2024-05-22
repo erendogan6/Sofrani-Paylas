@@ -40,7 +40,7 @@ class ShareViewModel @Inject constructor(private val repository: Repository) : V
 
     fun uploadImage(imageUri: Uri) {
         viewModelScope.launch {
-            repository.uploadImageAndGetUrl(imageUri).collect { result ->
+            repository.uploadImageAndGetUrl(imageUri, "image/").collect { result ->
                 result.onSuccess { url ->
                     _imageUrl.value = url
                     _uploadStatus.value = "true"
