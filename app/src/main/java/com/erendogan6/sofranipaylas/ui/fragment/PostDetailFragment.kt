@@ -68,6 +68,7 @@ class PostDetailFragment : Fragment() {
     private fun bindPostDetails(post: Post) {
         binding.detailTitle.text = post.title
         binding.detailDescription.text = post.description
+        binding.detailMaxParticipants.text = "Maksimum Kişi Sayısı: " + post.maxParticipants.toString()
         Glide.with(this).load(post.image).into(binding.detailImage)
 
         binding.detailAddress.setOnClickListener {
