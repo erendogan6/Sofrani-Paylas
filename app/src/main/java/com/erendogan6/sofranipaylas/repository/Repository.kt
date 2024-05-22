@@ -131,7 +131,7 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
 
             if (currentUserID.isNotEmpty()) {
                 val post =
-                    Post(title = title, description = description, maxParticipants = participants, image = imageUrl, date = date, eventStatus = true, hostID = currentUserID, latitude = latitude, longitude = longitude)
+                    Post(title = title, description = description, maxParticipants = participants, image = imageUrl, date = date, eventStatus = true, hostID = currentUserID, latitude = latitude, longitude = longitude, createDate = Timestamp.now())
                 Log.d("submitPost", "Post Data: $post")
 
                 firestore.collection("Posts").add(post).await()
