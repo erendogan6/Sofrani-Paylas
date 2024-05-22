@@ -117,14 +117,14 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
         }
     }
 
-    suspend fun submitPost(title: String, description: String, participants: Int, imageUrl: String, date: Timestamp, location: GeoPoint): Flow<Result<Boolean>> = flow {
+    suspend fun submitPost(title: String, description: String, participants: Int, imageUrl: String, date: Timestamp, latitude: Double, longitude: Double): Flow<Result<Boolean>> = flow {
         try {
             val currentUserID = firebaseAuth.currentUser?.uid.orEmpty()
             Log.d("submitPost", "Current User ID: $currentUserID")
 
             if (currentUserID.isNotEmpty()) {
                 val post =
-                    Post(title = title, description = description, maxParticipants = participants, image = imageUrl, date = date, eventStatus = true, hostID = currentUserID, location = location)
+                    Post(title = title, description = description, maxParticipants = participants, image = imageUrl, date = date, eventStatus = true, hostID = currentUserID, latitude = latitude, longitude = longitude)
                 Log.d("submitPost", "Post Data: $post")
 
                 firestore.collection("Posts").add(post).await()

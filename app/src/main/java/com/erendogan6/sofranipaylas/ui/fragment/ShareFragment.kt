@@ -171,7 +171,8 @@ class ShareFragment : Fragment() {
         val participants = binding.participantsEditText.text.toString().toIntOrNull() ?: 0
         val imageUri = selectedImageUri
         val date = selectedDate ?: Timestamp.now()
-        val location = GeoPoint(viewModel.selectedLocation.value?.latitude ?: 0.0, viewModel.selectedLocation.value?.longitude ?: 0.0)
+        val latitude = viewModel.selectedLocation.value?.latitude ?: 0.0
+        val longitude = viewModel.selectedLocation.value?.longitude ?: 0.0
 
         if (title.isEmpty() || description.isEmpty() || imageUri == null) {
             toastGoster("Başlık, açıklama ve bir resim eklemelisiniz.")
@@ -181,7 +182,7 @@ class ShareFragment : Fragment() {
         viewModel.uploadImage(imageUri)
         viewModel.imageUrl.observe(viewLifecycleOwner) { imageUrl ->
             if (imageUrl.isNotEmpty()) {
-                viewModel.submitPost(title, description, participants, imageUrl, date, location)
+                viewModel.submitPost(title, description, participants, imageUrl, date, latitude, longitude)
                 viewModel.submitStatus.observe(viewLifecycleOwner) { status ->
                     if (status) {
                         toastGoster("Gönderi başarıyla oluşturuldu.")

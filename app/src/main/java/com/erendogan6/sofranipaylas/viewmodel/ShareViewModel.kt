@@ -51,9 +51,9 @@ class ShareViewModel @Inject constructor(private val repository: Repository) : V
         }
     }
 
-    fun submitPost(title: String, description: String, participants: Int, imageUrl: String, date: Timestamp, location: GeoPoint) {
+    fun submitPost(title: String, description: String, participants: Int, imageUrl: String, date: Timestamp, latitude: Double, longitude: Double) {
         viewModelScope.launch {
-            repository.submitPost(title, description, participants, imageUrl, date, location).collect { result ->
+            repository.submitPost(title, description, participants, imageUrl, date, latitude, longitude).collect { result ->
                 result.onSuccess {
                     _submitStatus.value = true
                 }.onFailure { throwable ->

@@ -1,7 +1,6 @@
 package com.erendogan6.sofranipaylas.model
 
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.PropertyName
 
 data class Post(
@@ -20,8 +19,9 @@ data class Post(
     @PropertyName("image")
     val image: String = "",
 
-    @PropertyName("location")
-    val location: GeoPoint = GeoPoint(0.0, 0.0),
+    val latitude: Double = 0.0,
+
+    val longitude: Double = 0.0,
 
     @PropertyName("maxParticipants")
     val maxParticipants: Int = 0,
