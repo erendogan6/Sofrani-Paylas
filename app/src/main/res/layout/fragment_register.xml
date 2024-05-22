@@ -127,11 +127,13 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textHost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_bold"
             android:paddingEnd="8dp"
-            android:text="Ağırlayan" />
+            android:text="@string/agirlayan"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/userTypeSwitch"
@@ -142,11 +144,13 @@
             android:textOn="" />
 
         <TextView
-            android:id="@+id/textGuest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_bold"
             android:paddingStart="8dp"
-            android:text="Misafir" />
+            android:text="@string/misafir"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
     </LinearLayout>
 
 
