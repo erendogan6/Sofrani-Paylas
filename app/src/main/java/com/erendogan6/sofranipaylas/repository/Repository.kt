@@ -150,4 +150,22 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
 
         emit(posts)
     }
+
+    fun getCurrentUser(): Flow<User?> = flow {
+        val user = firebaseAuth.currentUser
+        if (user != null) {
+            val userDocRef = firestore.collection("Users").document(user.uid)
+            val document = userDocRef.get().await()
+            if (document.exists()) {
+                val currentUser = User(about = document.getString("about") ?: "", email = document.getString("email") ?: user.email ?: "", isHost = document.getBoolean("isHost")
+                    ?: false, name = document.getString("name") ?: "", phone = document.getString("phone"), profilePicture = document.getString("profilePicture")
+                    ?: "", role = document.getString("role") ?: "", surname = document.getString("surname") ?: "", userName = document.getString("userName") ?: "")
+                emit(currentUser)
+            } else {
+                emit(null)
+            }
+        } else {
+            emit(null)
+        }
+    }
 }
