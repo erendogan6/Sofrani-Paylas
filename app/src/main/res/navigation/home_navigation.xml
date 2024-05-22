@@ -9,7 +9,12 @@
         android:id="@+id/homeFragment"
         android:name="com.erendogan6.sofranipaylas.ui.fragment.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.erendogan6.sofranipaylas.ui.fragment.ProfileFragment"
@@ -19,6 +24,7 @@
             android:id="@+id/action_profileFragment_to_changePasswordFragment"
             app:destination="@id/changePasswordFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/shareFragment"
         android:name="com.erendogan6.sofranipaylas.ui.fragment.ShareFragment"
@@ -59,6 +65,7 @@
             android:defaultValue="0.0"
             app:argType="float" />
     </fragment>
+
     <fragment
         android:id="@+id/changePasswordFragment"
         android:name="com.erendogan6.sofranipaylas.ui.fragment.ChangePasswordFragment"
@@ -68,4 +75,16 @@
             android:id="@+id/action_changePasswordFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/postDetailFragment"
+        android:name="com.erendogan6.sofranipaylas.ui.fragment.PostDetailFragment"
+        android:label="fragment_post_detail"
+        tools:layout="@layout/fragment_post_detail">
+        <argument
+            android:name="postId"
+            android:defaultValue=""
+            app:argType="string" />
+    </fragment>
+
 </navigation>
