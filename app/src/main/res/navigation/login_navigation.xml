@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
     app:startDestination="@id/loginFragment">
 
     <fragment
@@ -12,11 +10,6 @@
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -30,9 +23,4 @@
             app:popUpToInclusive="true" />
     </fragment>
 
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.erendogan6.sofranipaylas.ui.fragment.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
 </navigation>
