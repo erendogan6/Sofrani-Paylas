@@ -5,6 +5,7 @@ import android.util.Log
 import com.erendogan6.sofranipaylas.model.Post
 import com.erendogan6.sofranipaylas.model.User
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
@@ -17,6 +18,23 @@ import javax.inject.Singleton
 
 @Singleton
 class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, private val firestore: FirebaseFirestore, private val storage: FirebaseStorage) {
+
+    suspend fun changePassword(currentPassword: String, newPassword: String): Flow<Boolean> = flow {
+        val user = firebaseAuth.currentUser
+        if (user != null && user.email != null) {
+            val credential = EmailAuthProvider.getCredential(user.email!!, currentPassword)
+            try {
+                user.reauthenticate(credential).await()
+                user.updatePassword(newPassword).await()
+                emit(true)
+            } catch (e: Exception) {
+                emit(false)
+            }
+        } else {
+            emit(false)
+        }
+    }
+
     suspend fun loginUser(email: String, password: String): Flow<User?> = flow {
         try {
             val authResult = firebaseAuth.signInWithEmailAndPassword(email, password).await()
@@ -43,7 +61,6 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
         }
     }
 
-
     suspend fun registerUser(email: String, password: String, name: String, surname: String, phone: String, userName: String, isHost: Boolean): Flow<Boolean> = flow {
         try {
             val authResult = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
@@ -61,7 +78,6 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
             emit(false)
         }
     }
-
 
     suspend fun uploadImageAndGetUrl(imageUri: Uri): Flow<Result<String>> = flow {
         try {
@@ -107,5 +123,4 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
 
         emit(posts)
     }
-
 }
