@@ -184,7 +184,7 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
         }
     }
 
-    suspend fun fetchAddress(latLng: LatLng): String? {
+    suspend fun fetchAddress(latLng: LatLng): String {
         return withContext(Dispatchers.IO) {
             val geocoder = Geocoder(context, Locale.getDefault())
             var result: String? = null
