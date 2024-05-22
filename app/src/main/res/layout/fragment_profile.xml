@@ -42,7 +42,6 @@
                 android:layout_width="260dp"
                 android:layout_height="260dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/circle_image_view"
                 android:orientation="vertical">
 
                 <ImageView
@@ -97,7 +96,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/btn_3" />
+                    app:srcCompat="@drawable/camera_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -142,7 +141,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/btn_4" />
+                    app:srcCompat="@drawable/change_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -189,7 +188,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/btn_6" />
+                    app:srcCompat="@drawable/quit_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
