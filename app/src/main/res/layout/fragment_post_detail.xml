@@ -1,59 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/detailImage"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:scaleType="centerCrop"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/detailTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        tools:text="Event Title" />
+        <ImageView
+            android:id="@+id/detailImage"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/detailDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        tools:text="2023-05-10 14:30" />
+        <TextView
+            android:id="@+id/detailTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/lato_bold"
+            android:text="Başlık"
+            android:textColor="#000000"
+            android:textSize="24sp" />
 
-    <TextView
-        android:id="@+id/detailDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        tools:text="Description of the event" />
 
-    <TextView
-        android:id="@+id/detailAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/map_icon"
-        android:drawablePadding="10dp"
-        android:gravity="center_vertical"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        tools:text="Event Address" />
+        <TextView
+            android:id="@+id/detailDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/calendar_icon"
+            android:drawablePadding="6dp"
+            android:fontFamily="@font/lato"
+            android:gravity="center_vertical"
+            android:text="Tarih"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/joinButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Join Event"
-        android:textSize="20sp" />
+        <!-- Etkinlik Açıklaması -->
+        <TextView
+            android:id="@+id/detailDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/title_icon"
+            android:drawablePadding="10dp"
+            android:fontFamily="@font/lato"
+            android:gravity="center_vertical"
+            android:text="Açıklama"
+            android:textColor="#000000"
+            android:textSize="20sp" />
 
-</LinearLayout>
+        <!-- Etkinlik Açıklaması -->
+        <TextView
+            android:id="@+id/detailMaxParticipants"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/person_icon"
+            android:drawablePadding="10dp"
+            android:fontFamily="@font/lato"
+            android:gravity="center_vertical"
+            android:text="Kişi Sayısı"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/detailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/map_icon"
+            android:drawablePadding="10dp"
+            android:fontFamily="@font/lato"
+            android:gravity="center_vertical"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            tools:text="Event Address" />
+
+        <Button
+            android:id="@+id/joinButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Join Event"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+</ScrollView>
