@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -25,6 +26,7 @@ import com.erendogan6.sofranipaylas.R
 import com.erendogan6.sofranipaylas.databinding.FragmentShareBinding
 import com.erendogan6.sofranipaylas.extensions.checkUserSessionAndNavigate
 import com.erendogan6.sofranipaylas.viewmodel.ShareViewModel
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.GeoPoint
@@ -91,7 +93,26 @@ class ShareFragment : Fragment() {
         viewModel.selectedLocation.observe(viewLifecycleOwner) { location ->
             location?.let {
                 binding.locationTextView.text = "Seçilen Konum: (${it.latitude}, ${it.longitude})"
+                val address = getAddressFromLatLng(it)
+                binding.locationTextView.text = address ?: "Adres bulunamadı"
             }
+        }
+    }
+
+    private fun getAddressFromLatLng(latLng: LatLng): String? {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        return try {
+            val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+            addresses.let {
+                if (addresses?.isNotEmpty()!!) {
+                    val address = addresses[0]
+                    "${address.getAddressLine(0)}"
+                } else {
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            null
         }
     }
 
