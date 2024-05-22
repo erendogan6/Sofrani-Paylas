@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.erendogan6.sofranipaylas.R
 import com.erendogan6.sofranipaylas.databinding.EventItemBinding
 import com.erendogan6.sofranipaylas.model.Post
 import com.erendogan6.sofranipaylas.ui.fragment.HomeFragmentDirections
@@ -18,15 +19,22 @@ class HomeAdapter : ListAdapter<Post, HomeAdapter.ViewHolder>(DiffCallback()) {
     class ViewHolder(private val binding: EventItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(post: Post) {
             binding.eventTitle.text = post.title
-            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            val formatter = SimpleDateFormat("dd MMMM yyyy, EEEE, HH:mm", Locale.getDefault())
             binding.eventDate.text = formatter.format(post.date.toDate())
             binding.eventDesc.text = post.description
             post.image.let {
                 if (it.isNotEmpty()) {
-                    Glide.with(binding.root.context).load(it).into(binding.eventImageView)
+                    Glide.with(binding.root.context).load(it).optionalCenterCrop().into(binding.eventImageView)
                 }
             }
             binding.usernameTextView.text = post.hostUserName
+
+            val iconRes = if (post.eventStatus) {
+                R.drawable.open_icon
+            } else {
+                R.drawable.close_icon
+            }
+            binding.eventTitle.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
 
             binding.root.setOnClickListener {
                 val action = HomeFragmentDirections.actionHomeFragmentToPostDetailFragment(post.postID)
