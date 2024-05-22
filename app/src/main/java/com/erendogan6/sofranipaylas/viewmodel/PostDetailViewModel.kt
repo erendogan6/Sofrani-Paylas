@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.erendogan6.sofranipaylas.model.Post
 import com.erendogan6.sofranipaylas.repository.Repository
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,12 +18,19 @@ class PostDetailViewModel @Inject constructor(private val repository: Repository
     private val _post = MutableLiveData<Post?>()
     val post: LiveData<Post?> = _post
 
+    private val _joinStatus = MutableLiveData<Result<Boolean>>()
+    val joinStatus: LiveData<Result<Boolean>> = _joinStatus
+
+    private val _isAlreadyJoined = MutableLiveData<Boolean>()
+    val isAlreadyJoined: LiveData<Boolean> = _isAlreadyJoined
+
     fun loadPostDetails(postId: String) {
         viewModelScope.launch {
             try {
                 val result = repository.getPostById(postId)
                 if (result != null) {
                     _post.value = result
+                    checkIfAlreadyJoined(result)
                     Log.d("PostDetailViewModel", "Post loaded successfully: $result")
                 } else {
                     Log.e("PostDetailViewModel", "Failed to load post with id: $postId")
@@ -36,7 +44,13 @@ class PostDetailViewModel @Inject constructor(private val repository: Repository
 
     fun joinPost(postId: String) {
         viewModelScope.launch {
-            repository.joinPost(postId)
+            val result = repository.joinPost(postId)
+            _joinStatus.value = result
         }
+    }
+
+    private fun checkIfAlreadyJoined(post: Post) {
+        val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
+        _isAlreadyJoined.value = post.participants?.contains(currentUserID) == true
     }
 }
