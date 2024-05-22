@@ -32,38 +32,58 @@ class PostDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupObservers()
+        setupJoinButton()
         viewModel.loadPostDetails(args.postId)
+    }
 
+    private fun setupObservers() {
         viewModel.post.observe(viewLifecycleOwner) { post ->
-            post?.let { bindPost(it) }
+            post?.let { bindPostDetails(it) }
         }
 
         viewModel.joinStatus.observe(viewLifecycleOwner) { result ->
-            result.onSuccess {
-                Toast.makeText(requireContext(), "Başarıyla katıldınız!", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.action_postDetailFragment_to_homeFragment)
-            }.onFailure { e ->
-                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-            }
+            handleJoinStatus(result)
         }
 
         viewModel.isAlreadyJoined.observe(viewLifecycleOwner) { isJoined ->
-            if (isJoined) {
-                binding.joinButton.isEnabled = false
-                binding.joinButton.text = "Bu etkinliğe katıldınız"
-            }
+            updateJoinButtonState(isJoined)
         }
+    }
 
+    private fun setupJoinButton() {
         binding.joinButton.setOnClickListener {
             viewModel.joinPost(args.postId)
         }
     }
 
-    private fun bindPost(post: Post) {
+    private fun bindPostDetails(post: Post) {
         binding.detailTitle.text = post.title
         binding.detailDate.text = post.date.toDate().toString()
         binding.detailDescription.text = post.description
         Glide.with(this).load(post.image).into(binding.detailImage)
+    }
+
+    private fun handleJoinStatus(result: Result<Boolean>) {
+        result.onSuccess {
+            showToast("Başarıyla katıldınız!")
+            navigateToHome()
+        }.onFailure { e ->
+            showToast(e.message ?: "Katılım sırasında bir hata oluştu.")
+        }
+    }
+
+    private fun updateJoinButtonState(isJoined: Boolean) {
+        binding.joinButton.isEnabled = !isJoined
+        binding.joinButton.text = if (isJoined) "Bu etkinliğe katıldınız" else "Katıl"
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun navigateToHome() {
+        findNavController().navigate(R.id.action_postDetailFragment_to_homeFragment)
     }
 
     override fun onDestroyView() {
