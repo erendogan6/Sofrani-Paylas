@@ -200,18 +200,34 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
             val document = firestore.collection("Posts").document(postId).get().await()
             document.toObject(Post::class.java)
         } catch (e: Exception) {
+            Log.e("Repository", "Error getting post by id: $postId", e)
             null
         }
     }
 
-    suspend fun joinPost(postId: String) {
+    suspend fun joinPost(postId: String): Result<Boolean> {
         val currentUser = firebaseAuth.currentUser
-        if (currentUser != null) {
+        return if (currentUser != null) {
             val currentUserID = currentUser.uid
             Log.d("Repository", "Current User ID: $currentUserID")
-            firestore.collection("Posts").document(postId).update("participants", FieldValue.arrayUnion(currentUserID)).await()
+
+            try {
+                val postSnapshot = firestore.collection("Posts").document(postId).get().await()
+                val post = postSnapshot.toObject(Post::class.java)
+
+                if (post?.participants?.contains(currentUserID) == true) {
+                    return Result.failure(Exception("User already joined"))
+                }
+
+                firestore.collection("Posts").document(postId).update("participants", FieldValue.arrayUnion(currentUserID)).await()
+                Result.success(true)
+            } catch (e: Exception) {
+                Log.e("Repository", "Error joining post", e)
+                Result.failure(e)
+            }
         } else {
             Log.e("Repository", "User not authenticated")
+            Result.failure(Exception("User not authenticated"))
         }
     }
 
