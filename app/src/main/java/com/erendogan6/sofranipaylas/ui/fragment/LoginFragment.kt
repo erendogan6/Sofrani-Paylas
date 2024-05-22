@@ -19,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginFragment : Fragment() {
     private val viewModel: UserViewModel by viewModels()
     private lateinit var binding: FragmentLoginBinding
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
 
         binding.loginButton.setOnClickListener {
