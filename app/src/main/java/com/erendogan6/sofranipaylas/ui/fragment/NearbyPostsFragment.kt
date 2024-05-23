@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.erendogan6.sofranipaylas.R
 import com.erendogan6.sofranipaylas.viewmodel.NearbyPostsViewModel
@@ -29,6 +30,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NearbyPostsFragment : Fragment(), OnMapReadyCallback {
@@ -38,6 +40,8 @@ class NearbyPostsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
     private lateinit var googleMap: GoogleMap
+    private var userMarker: Marker? = null
+    private var isFirstLocationUpdate = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_nearby_posts, container, false)
@@ -68,8 +72,12 @@ class NearbyPostsFragment : Fragment(), OnMapReadyCallback {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
                     val userLocation = LatLng(location.latitude, location.longitude)
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12f))
-                    viewModel.fetchNearbyPosts(location.latitude, location.longitude)
+                    if (isFirstLocationUpdate) {
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12f))
+                        isFirstLocationUpdate = false
+                    }
+                    updateLocationMarker(userLocation)
+                    fetchNearbyPosts(location.latitude, location.longitude)
                 }
             }
         }
@@ -84,13 +92,18 @@ class NearbyPostsFragment : Fragment(), OnMapReadyCallback {
         locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000).setWaitForAccurateLocation(false).setMinUpdateIntervalMillis(5000).setMaxUpdateDelayMillis(15000).build()
 
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
+    }
 
-        viewModel.posts.observe(viewLifecycleOwner) { posts ->
-            googleMap.clear()
-            enableMyLocation()
-            for (post in posts) {
-                val postLocation = LatLng(post.latitude, post.longitude)
-                googleMap.addMarker(MarkerOptions().position(postLocation).title(post.title).snippet(post.description))
+    private fun fetchNearbyPosts(latitude: Double, longitude: Double) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.fetchNearbyPosts(latitude, longitude)
+            viewModel.posts.observe(viewLifecycleOwner) { posts ->
+                googleMap.clear()
+                enableMyLocation()
+                for (post in posts) {
+                    val postLocation = LatLng(post.latitude, post.longitude)
+                    googleMap.addMarker(MarkerOptions().position(postLocation).title(post.title).snippet(post.description))
+                }
             }
         }
     }
@@ -98,6 +111,14 @@ class NearbyPostsFragment : Fragment(), OnMapReadyCallback {
     private fun enableMyLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             googleMap.isMyLocationEnabled = true
+        }
+    }
+
+    private fun updateLocationMarker(location: LatLng) {
+        if (userMarker == null) {
+            userMarker = googleMap.addMarker(MarkerOptions().position(location).title("Mevcut Konum"))
+        } else {
+            userMarker?.position = location
         }
     }
 
