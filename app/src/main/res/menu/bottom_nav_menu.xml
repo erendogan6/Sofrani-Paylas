@@ -7,6 +7,11 @@
         android:title="@string/ana_ekran" />
 
     <item
+        android:id="@+id/nearbyPostsFragment"
+        android:icon="@drawable/map_icon"
+        android:title="@string/harita" />
+
+    <item
         android:id="@+id/shareFragment"
         android:icon="@drawable/share_icon"
         android:title="@string/paylas" />

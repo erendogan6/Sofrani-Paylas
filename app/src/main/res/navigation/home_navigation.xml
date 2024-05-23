@@ -103,4 +103,15 @@
             app:argType="float" />
     </fragment>
 
+    <fragment
+        android:id="@+id/nearbyPostsFragment"
+        android:name="com.erendogan6.sofranipaylas.ui.fragment.NearbyPostsFragment"
+        android:label="Nearby Posts"
+        tools:layout="@layout/fragment_nearby_posts">
+        <action
+            android:id="@+id/action_nearbyPostsFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+    </fragment>
+
+
 </navigation>
