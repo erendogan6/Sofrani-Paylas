@@ -72,7 +72,7 @@ class ShareFragment : Fragment() {
             submitPost()
         }
 
-        binding.locationPickerButton.setOnClickListener {
+        binding.locationTextView.setOnClickListener {
             findNavController().navigate(R.id.action_shareFragment_to_locationPickerFragment)
         }
     }
@@ -84,13 +84,14 @@ class ShareFragment : Fragment() {
 
         viewModel.selectedLocation.observe(viewLifecycleOwner) { location ->
             location?.let {
-                binding.locationTextView.text = "Seçilen Konum: (${it.latitude}, ${it.longitude})"
+                val locationText = "Adres Alınıyor..."
+                binding.locationTextView.setText(locationText)
                 viewModel.fetchAddress(it)
             }
         }
 
         viewModel.address.observe(viewLifecycleOwner) { address ->
-            binding.locationTextView.text = address
+            binding.locationTextView.setText(address)
         }
     }
 

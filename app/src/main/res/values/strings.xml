@@ -34,4 +34,5 @@
     <string name="etkinlik_detaylarini_incele">Etkinlik Detaylarını İncele</string>
     <string name="etkinlik_sahibi_profil_resmi">Etkinlik Sahibi Profil Resmi</string>
     <string name="harita">Harita</string>
+    <string name="konum_yok">Konum</string>
 </resources>
