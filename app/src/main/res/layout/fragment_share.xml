@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E0F7FA"
@@ -87,40 +86,39 @@
                 android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:orientation="horizontal">
+            android:layout_marginBottom="5dp"
+            app:endIconDrawable="@drawable/map_icon"
+            app:endIconMode="custom"
+            app:endIconTint="@color/black">
 
-            <Button
-                android:id="@+id/locationPickerButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_bold"
-                android:text="@string/konum_sec"
-                android:textSize="20sp" />
-
-            <TextView
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/locationTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
+                android:ellipsize="none"
+                android:ems="10"
+                android:focusable="false"
                 android:fontFamily="@font/lato"
-                android:text="Seçilen Konum: Yok"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
+                android:gravity="start|top"
+                android:hint="@string/konum_yok"
+                android:inputType="textMultiLine"
+                android:maxLines="4"
+                android:minLines="1"
+                android:scrollHorizontally="false"
+                android:textSize="18sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <ImageView
             android:id="@+id/shareImage"
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="250dp"
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
-            android:contentDescription="Paylasim Resmi"
+            android:contentDescription="@string/etkinlik_resmi"
             android:src="@drawable/photo_icon" />
 
         <Button
