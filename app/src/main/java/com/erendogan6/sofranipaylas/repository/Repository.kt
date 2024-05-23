@@ -13,6 +13,7 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -229,6 +230,32 @@ class Repository @Inject constructor(private val firebaseAuth: FirebaseAuth, pri
             Log.e("Repository", "User not authenticated")
             Result.failure(Exception("User not authenticated"))
         }
+    }
+
+    suspend fun getNearbyPosts(latitude: Double, longitude: Double): List<Post> {
+        return try {
+            val postsSnapshot = firestore.collection("Posts").whereEqualTo("eventStatus", true).get().await()
+
+            postsSnapshot.documents.mapNotNull { document ->
+                val post = document.toObject(Post::class.java)
+                if (post != null && isNearby(post, latitude, longitude)) {
+                    post.postID = document.id
+                    post
+                } else {
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    private fun isNearby(post: Post, latitude: Double, longitude: Double): Boolean {
+        val postLocation = GeoPoint(post.latitude, post.longitude)
+        val userLocation = GeoPoint(latitude, longitude)
+        val distance = FloatArray(1)
+        android.location.Location.distanceBetween(userLocation.latitude, userLocation.longitude, postLocation.latitude, postLocation.longitude, distance)
+        return distance[0] <= 50000
     }
 
 }
